@@ -1,0 +1,55 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class KineticPower : MonoBehaviour {
+
+    public GameObject player;
+    public GameObject powerObject;
+    public GameObject obstacles;
+ 
+    public Player movement;
+    bool isPowerActive = true;
+
+    void OnTriggerEnter (Collider other) {
+        if (isPowerActive && other.gameObject == powerObject) {
+            DeactivatePowerAndApplyKinetic ();
+
+        }
+    }
+
+    void DeactivatePowerAndApplyKinetic () {
+        isPowerActive = false; // Power is no longer active
+
+        powerObject.SetActive (false); // Deactivate the power GameObject
+
+        Rigidbody[] obstacleRigidbodies = obstacles.GetComponentsInChildren<Rigidbody> ();
+
+        foreach (Rigidbody rb in obstacleRigidbodies) {
+            rb.isKinematic = false; // Set Rigidbody to kinematic
+        }
+
+      
+            if (obstacles.tag == "Obstacle") {
+
+                movement.enabled = true;
+            }
+        
+        StartCoroutine (ResetKinematicAndDestroyPower ());
+    }
+
+    IEnumerator ResetKinematicAndDestroyPower () {
+        yield return new WaitForSeconds (5f);
+       
+
+        Rigidbody[] obstacleRigidbodies = obstacles.GetComponentsInChildren<Rigidbody> ();
+
+        foreach (Rigidbody rb in obstacleRigidbodies) {
+            rb.isKinematic = true;
+        }
+      
+
+            Destroy (powerObject);
+        }
+    }
+
