@@ -1,0 +1,56 @@
+public class PlayerController : MonoBehaviour
+{
+    private bool isGameOver = false;
+    private bool isPowerUpActive = false;
+
+    // Other variables and methods...
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (isPowerUpActive)
+        {
+            // Power-up active, no game over on obstacle collision
+            return;
+        }
+
+        if (other.CompareTag("Obstacle"))
+        {
+            GameOver();
+        }
+
+        if (other.CompareTag("PowerUp"))
+        {
+            CollectPowerUp();
+        }
+    }
+
+    void CollectPowerUp()
+    {
+        isPowerUpActive = true;
+        StartCoroutine(DeactivatePowerUpAfterTime(5f)); // Power-up lasts for 5 seconds
+
+        // Add logic for power-up effects here
+    }
+
+    IEnumerator DeactivatePowerUpAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+        isPowerUpActive = false;
+
+        // Remove power-up effects here
+    }
+
+    void Update()
+    {
+        if (!isGameOver)
+        {
+            // Your regular game logic goes here
+        }
+    }
+
+    void GameOver()
+    {
+        isGameOver = true;
+        // Add game over logic here, like displaying a game over screen
+    }
+}
